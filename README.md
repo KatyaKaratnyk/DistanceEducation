@@ -1,3 +1,3 @@
-Project about distance education
+Project is about distance education
 Created by Karatnyk Kateryna
 
