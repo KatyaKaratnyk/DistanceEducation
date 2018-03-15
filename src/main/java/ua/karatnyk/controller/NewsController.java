@@ -1,6 +1,7 @@
 package ua.karatnyk.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import javax.validation.Valid;
 
@@ -16,27 +17,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.multipart.MultipartFile;
 
+import ua.karatnyk.constants.Constants;
+import ua.karatnyk.domain.NewsRequest;
 import ua.karatnyk.entity.News;
+import ua.karatnyk.mapper.NewsMapper;
 import ua.karatnyk.service.NewsService;
+import ua.karatnyk.service.UserService;
 import ua.karatnyk.service.utilities.FileManager;
 
 @Controller
-@RequestMapping("/admin")
-@SessionAttributes({"newsEditModel", "newsId"})
+@RequestMapping("/director")
+@SessionAttributes({"newsEditModel"})
 public class NewsController {
 	
 	@Autowired
 	private NewsService newsService;
 	
+	@Autowired
+	private UserService userService;
+	
 	private String titleFilter = new String();
 	
 	@GetMapping("/news/{pageNumber}")
-	public String showNewsAdminPage(Model model, @PathVariable("pageNumber") int pageNumber) {
+	public String showNewsTablePage(Model model, @PathVariable("pageNumber") int pageNumber) {
 		
 		Page<News> page = newsService.getPagebleNews(pageNumber, 5, "DESC", "createdAt");
-		
 		if(!this.titleFilter.isEmpty() && this.titleFilter != null) {
 			page = newsService.getPagebleNewsWithTitleFilter(pageNumber, 5, "DESC", "createdAt", this.titleFilter);
 		} 
@@ -48,86 +54,77 @@ public class NewsController {
 		model.addAttribute("beginIndex", begin);
 		model.addAttribute("endIndex", end);
 		model.addAttribute("currentIndex", currentPage);
-		for(News n: page.getContent()) {
-			n.setPathToFoto(FileManager.encodedFileToByteFromProject(n.getPathToFoto()));
-		}
-		model.addAttribute("newsListByPageSize", page.getContent());
+		model.addAttribute("newsListByPageSize", NewsMapper.newsToNewsRequest(page.getContent()));
 	
-		return "admin/news/view_news";
+		return "director/news/view_news";
 	}
 	
-	@PostMapping("/news/search") 
+	@PostMapping("/search/news") 
 	public String makeFilter(@RequestParam("titleFilter") String titleFilter) {
 		this.titleFilter = titleFilter;
-		return "redirect:/admin/news/1";
+		return "redirect:/director/news/1";
 	}
-	@PostMapping("/news/remove_filter") 
+	@PostMapping("/remove_filter/news") 
 	public String removeFilter() {
 		this.titleFilter = "";
-		return "redirect:/admin/news/1";
+		return "redirect:/director/news/1";
 	}
 	
-	@GetMapping("/addNews")
+	@GetMapping("/add_news")
 	public String showAddNewsPage(Model model) {
 		
-		model.addAttribute("newsModel", new News());	
-		return "admin/news/add_news";
+		model.addAttribute("newsRequestModel", new NewsRequest());	
+		return "director/news/add_news";
 	}
 	
-	@PostMapping("/addNews")
-	public String addNewsPage(@ModelAttribute("newsModel") @Valid News news, BindingResult result, @RequestParam("uploadFile") MultipartFile file) throws IOException {
+	@PostMapping("/add_news")
+	public String addNewsPage(@ModelAttribute("newsRequestModel") @Valid NewsRequest newsRequest, 
+			BindingResult result, Principal principal) throws IOException  {
 		
 		if(result.hasErrors()) {
-			return "admin/news/add_news";
+			return "director/news/add_news";
 		}
 		
-		FileManager.saveImageInProject(file, "newsPhoto");
-		news.setPathToFoto(FileManager.pathToImageInProject(file, "newsPhoto"));
+		News news = NewsMapper.newsRequestToNewsEntity(newsRequest);
+		news.setUserEntity(userService.findByLogin(principal.getName()));
 		newsService.saveNews(news);
-		return "redirect:/admin/news/1";
+		FileManager.saveImageInProject(newsRequest.getFile(), Constants.FOLDER_FOR_NEWS_IMAGES);
+		return "redirect:/director/news/1";
 	}
 	
 	@GetMapping("/profile/news{newsId}")
-	public String showNewsPage(Model model, @PathVariable("newsId") String newsId) {
+	public String showNewsProfilePage(Model model, @PathVariable("newsId") String newsId) {
 		News news = newsService.findById(Integer.parseInt(newsId));
-		
-		model.addAttribute("foto", FileManager.encodedFileToByteFromProject(news.getPathToFoto()));
-		model.addAttribute("newsModel", news);
-		
-		return "admin/news/profile_news";
+		NewsRequest newsRequest = NewsMapper.newsToNewsRequest(news);	
+		model.addAttribute("newsModel", newsRequest);
+		return "director/news/profile_news";
 	}
 	
 	@GetMapping("/edit/news{newsId}")
-	public String showEditNewsPage(Model model, @PathVariable("newsId") String newsId) {
-		News news = newsService.findById(Integer.parseInt(newsId));
-		model.addAttribute("newsEditModel", news);
-		model.addAttribute("newsId", newsId);
-		
-		return "admin/news/edit_news";
+	public String showEditNewsPage(Model model, @PathVariable("newsId") int newsId) {
+		News news = newsService.findById(newsId);
+		NewsRequest request = NewsMapper.newsToNewsRequest(news); 	
+		model.addAttribute("newsEditModel", request);
+		return "director/news/edit_news";
 	}
 	
 	@PostMapping("/edit/news{newsId}")
-	public String editNewsPage(@ModelAttribute("newsEditModel") @Valid News news, BindingResult result, @RequestParam("uploadFile") MultipartFile file,
-			@ModelAttribute("newsId") String newsId) throws IOException {
+	public String editNewsPage(@ModelAttribute("newsEditModel") @Valid NewsRequest request,
+			BindingResult result) throws IOException{
 		if(result.hasErrors()) {
-			return "admin/news/edit_news";
+			return "director/news/edit_news";
 		}
-		
-		if(news.getPathToFoto() != null && file.isEmpty()) {
-			newsService.saveNews(news);
-			return "redirect:/admin/profile/news{newsId}";
-		}
-		
-		FileManager.saveImageInProject(file, "newsPhoto");
-		news.setPathToFoto(FileManager.pathToImageInProject(file, "newsPhoto"));
+		News news = NewsMapper.newsRequestToNewsEntity(request);
 		newsService.saveNews(news);
-		return "redirect:/admin/profile/news{newsId}";
+		
+		return "redirect:/director/profile/news"+request.getId();
 	}
 	
 	@GetMapping("/remove/news{newsId}") 
 	public String removeNewsIs(@PathVariable("newsId") String newsId) {
+		//FileManager.deleteFileFromProject(newsService.findById(Integer.parseInt(newsId)).getPathToFoto());
 		newsService.deleteNewsById(Integer.parseInt(newsId));
-		return "redirect:/admin/news/1";
+		return "redirect:/director/news/1";
 	}
 
 }

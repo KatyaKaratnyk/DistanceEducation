@@ -8,7 +8,6 @@ body {
     margin-left: 5vw;
     margin-top: 0.5vw;
     font-family: 'Jura', sans-serif;
-    min-height: 90vw;
     color: rgb(20, 130, 239);
 }
 a:visited {
@@ -20,6 +19,7 @@ textarea {
 }
 input {
 	color: rgb(20, 130, 239);
+	font-size: 1.5vw;
 }
 header {
     border-radius: 2vw;
@@ -130,26 +130,20 @@ nav a:hover {
 }
 .rightSide {
     color: rgb(20, 130, 239);
-    font-size: 2vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    font-size: 2vw;   
     width: 15vw;
     border: none;
     background: rgb(223, 238, 253);
     border-radius: 1vw;
-    margin-bottom: 3vw;
-    margin-top: 3vw;  
+    padding-top: 3vw;
+    padding-left: 2vw;
 }
-.textLogin {
-    margin-left: 2vw; 
-}
+
 .rightSide input {
     width: 11vw;
     height: 2vw;
     border: none;
     border-radius: 0.5vw;
-    margin-left: 2vw;
     color: rgb(20, 130, 239);
     
 }
@@ -160,11 +154,9 @@ nav a:hover {
     font-size: 1.5vw;
 }
 .enter {
-	background-color: white;
+	background-color: rgb(222, 222, 222);
 }
-.enter {
-   margin-top: 1vw;
-}
+
 .rightSide input::-moz-placeholder { 
     color: rgb(169, 209, 250);
 }
@@ -274,4 +266,24 @@ li.liLikePage {
 .error {
 	font-size: 0.5vw;
 	color: red;
+}
+.rememberMeText {
+	font-size: 0.5vw;
+}
+.flex {
+	 display: flex;
+	 justify-content: flex-start;
+	 align-items: center;
+}
+.rememberMeCheckBox {
+	zoom: 0.5;
+	margin-left: -4.3vw;
+}
+.rememberMeText {
+	font-size: 0.8vw;
+	margin-left: -2vw;
+}
+.failLogin {
+	color: red;
+	font-size: 0.5vw;
 }

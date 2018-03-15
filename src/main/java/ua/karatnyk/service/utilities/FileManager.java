@@ -3,6 +3,7 @@ package ua.karatnyk.service.utilities;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -44,11 +45,22 @@ public class FileManager {
 		} catch (NullPointerException e) {
 			// TODO Auto-generated catch block
 			return null;
-		} catch (IOException e) {
+		} catch (FileNotFoundException e) {
+			return null;
+		}
+		catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static void deleteFileFromProject(String pathToFile) {
+		if(!pathToFile.isEmpty() && pathToFile != null) {
+			File file = new File(pathToFile);
+			file.delete();
+		}
+		
 	}
 	
 

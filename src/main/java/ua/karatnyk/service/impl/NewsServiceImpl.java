@@ -32,7 +32,7 @@ public class NewsServiceImpl implements NewsService {
 	@Override
 	public Page<News> getPagebleNews(int pageNumber, int pageSize, String sort, String sortByField) {
 		PageRequest request = new PageRequest(pageNumber-1, pageSize, sort.toUpperCase().equals("ASC")?Sort.Direction.ASC:Sort.Direction.DESC, sortByField);
-		return newsRepository.findAllNewsNotActived(request);
+		return newsRepository.findAllNewsActived(request);
 	}
 
 	@Override
@@ -45,14 +45,14 @@ public class NewsServiceImpl implements NewsService {
 
 	@Override
 	public List<News> findAllNewsNotDeleted() {
-		return newsRepository.findAllNewsNotActived();
+		return newsRepository.findAllNewsActived();
 	}
 
 	@Override
 	public Page<News> getPagebleNewsWithTitleFilter(int pageNumber, int pageSize, String sort, String sortByField,
 			String titleFilter) {
 		PageRequest request = new PageRequest(pageNumber-1, pageSize, sort.toUpperCase().equals("ASC")?Sort.Direction.ASC:Sort.Direction.DESC, sortByField);
-		return newsRepository.findAllNewsNotActivedWithTitleFilter(request, titleFilter);
+		return newsRepository.findAllNewsActivedWithTitleFilter(request, titleFilter);
 	}
 
 	

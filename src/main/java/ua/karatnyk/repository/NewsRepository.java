@@ -16,12 +16,12 @@ import ua.karatnyk.entity.News;
 public interface NewsRepository extends JpaRepository<News, Integer>{
 	
 	@Query("Select c from News c where c.isDeleted = false")
-	Page<News> findAllNewsNotActived(Pageable pageable);
+	Page<News> findAllNewsActived(Pageable pageable);
 	
 	@Query("Select c from News c where c.isDeleted = false")
-	List<News> findAllNewsNotActived();
+	List<News> findAllNewsActived();
 	
 	@Query("Select c from News c where c.isDeleted = false and c.title like %:filter%")
-	Page<News> findAllNewsNotActivedWithTitleFilter(Pageable pageable, @Param("filter") String filter);
+	Page<News> findAllNewsActivedWithTitleFilter(Pageable pageable, @Param("filter") String filter);
 	
 }
