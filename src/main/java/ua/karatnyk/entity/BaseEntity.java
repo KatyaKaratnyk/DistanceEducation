@@ -25,14 +25,20 @@ public abstract class BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(name = "created_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP", updatable = false)
 	private Date createdAt;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by_user_id")
-	private UserEntity userEntity;
+	@JoinColumn(name = "created_by_user_id", updatable = false)
+	private UserEntity createdByUser;
 	
 	@Column(name = "is_deleted")
 	private boolean isDeleted;
-
+	
+	@Column(name = "last_updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	private Date lastUpdatedAt;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "last_updated_by_user_id")
+	private UserEntity lastUpdateByUser;
 }

@@ -21,6 +21,6 @@ public class News extends BaseEntity{
 	private String description;
 	
 	@Column(name = "path_to_foto")
-	private String pathToFoto;
+	private String nameFoto;
 	
 }

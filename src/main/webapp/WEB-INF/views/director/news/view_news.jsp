@@ -17,27 +17,28 @@
 </div>
 <div class="viewTable">
 	<table class="viewTable">
+	<thead>
 	<tr>
 		<td class="newsCol1">Назва новини</td>
 		<td class="newsCol2">Опис новини</td>
 		<td class="newsCol3">Постер новини</td>
 	</tr>
-	<c:forEach items="${newsListByPageSize}" var="newOne">
-		<tr>
-		<td class="newsCol1">
-			<a  class="linkLikeText" href="${pageContext.request.contextPath}/director/profile/news${newOne.getId()}">${newOne.getTitle()}</a>
-		</td>
-		<td class="newsCol2">${newOne.getDescription()}</td>
-		<td class="smallImg newsCol3">
-			<c:choose>
-				<c:when test="${not empty newOne.getEncodedFileToByte()}">
-					<img src="data:image/png;base64, ${newOne.getEncodedFileToByte()}">
-				</c:when>
-			</c:choose>
-		</td>
-	</tr>
-	</c:forEach>
-	<tr></tr>
+	</thead>
+	<tbody>
+		<c:forEach items="${newsListByPageSize}" var="newOne">
+			<tr onclick="openWin('${pageContext.request.contextPath}/director/profile/news${newOne.id}')">
+				<td class="newsCol1">${newOne.title}</td>
+				<td class="newsCol2">${newOne.description}</td>
+				<td class="smallImg newsCol3">
+					<c:choose>
+						<c:when test="${not empty newOne.encodedToByte}">
+							<img src="data:image/png;base64, ${newOne.encodedToByte}">
+						</c:when>
+					</c:choose>
+				</td>
+			</tr>
+		</c:forEach>
+	</tbody>
 </table>
 </div>
 <c:url var="firstUrl" value="${pageContext.request.contextPath}/director/news/1" />

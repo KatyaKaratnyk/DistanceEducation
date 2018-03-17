@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import ua.karatnyk.domain.TeacherAddRequest;
+import ua.karatnyk.domain.TeachersViewRequest;
 import ua.karatnyk.entity.UserEntity;
 import ua.karatnyk.enumerations.Subject;
 import ua.karatnyk.mapper.TeacherMapper;
 import ua.karatnyk.service.TeacherService;
 import ua.karatnyk.service.UserService;
+
 
 @Controller
 @RequestMapping("/director")
@@ -34,7 +36,7 @@ public class DirectorController {
 	@Autowired
 	UserService userService;
 	
-	@GetMapping("")
+	@GetMapping
 	public String showMainDirectorPage() {
 		return "director/main";
 	}
@@ -84,16 +86,30 @@ public class DirectorController {
 		
 		UserEntity entity = TeacherMapper.teacherAddRequestToUserEntity(request);
 		
-			
-		UserEntity currentEntity = userService.findByLogin(principal.getName());
-		entity.setNumberSchool(currentEntity.getNumberSchool());
-		entity.setUserEntity(currentEntity);
-		
+		entity.setNumberSchool(this.findCurrentUser(principal).getNumberSchool());
+		entity.setCreatedByUser(this.findCurrentUser(principal));
 		
 		userService.saveUser(entity);
 		return "redirect:/director/teachers/1";
 	}
+	@GetMapping("/profile-teacher{idTeacher}")
+	public String showProfileTeacher(@PathVariable("idTeacher") int idTeacher, Model model) {
+		
+		TeachersViewRequest request = TeacherMapper.userEntityToTeachersViewRequest(userService.findById(idTeacher));
+		model.addAttribute("teacherModel", request);
+		
+		return "director/teachers/view_profile_teacher";
+	}
 	
 	//------------------Учні-------------------------------
+	
+	
+	
+	
+	
+	//-------------------------------------------------------
+	private UserEntity findCurrentUser(Principal principal) {
+		return userService.findByLogin(principal.getName());
+	}
 
 }

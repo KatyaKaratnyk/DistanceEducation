@@ -7,6 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/javascript.js" ></script>
 <link type="font" href="https://fonts.googleapis.com/css?family=Amatic+SC|Caveat|Jura|Pacifico|Russo+One|Tangerine" rel="stylesheet">
 <title>
 	<tiles:getAsString name="title"></tiles:getAsString>

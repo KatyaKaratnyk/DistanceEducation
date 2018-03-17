@@ -47,26 +47,27 @@ public class UserEntity extends BaseEntity{
 	private String middleName;
 	
 	@Enumerated(EnumType.ORDINAL)
+	@Column(updatable = false)
 	private Role role;
 	
 	private String email;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(name = "number_school")
+	@Column(name = "number_school", updatable = false)
 	private School numberSchool;
 	
 	@Column(name = "birth_date")
 	private Date birthDate;
 	
-	@Column(name = "path_to_foto")
-	private String pathToFoto;
+	@Column(name = "name_foto")
+	private String nameFoto;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_id")
-	private ClassToStudent classStudent;
+	private ClassToStudent classStudent; //клас, в якому навчається учень. Тільки для учнів
 	
-	@OneToOne(mappedBy = "userEntity2")
-	private ClassToStudent classTeacher;
+	@OneToOne(mappedBy = "userEntity")
+	private ClassToStudent classTeacher; //клас, в якому вчитель є класним керівником. Тільки для вчителів
 
 	@Enumerated(EnumType.STRING)
 	private Subject subject;
@@ -75,24 +76,42 @@ public class UserEntity extends BaseEntity{
 	@JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
 	private List<Group> groups = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "userEntity")
+	@OneToMany(mappedBy = "createdByUser")
 	private List<Group> groups2 = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "userEntity")
+	@OneToMany(mappedBy = "createdByUser")
 	private List<Course> courses = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "userEntity")
+	@OneToMany(mappedBy = "createdByUser")
 	private List<Theme> themes = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "userEntity")
+	@OneToMany(mappedBy = "createdByUser")
 	private List<UserEntity> userEntities = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "userEntity")
+	@OneToMany(mappedBy = "createdByUser")
 	private List<ClassToStudent> classToStudents = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "userEntity")
+	@OneToMany(mappedBy = "createdByUser")
 	private List<News> newsList = new ArrayList<>();
 	
+	
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<Group> groups3 = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<Course> courses2 = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<Theme> themes2 = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<UserEntity> userEntities2 = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<ClassToStudent> classToStudents2 = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<News> newsList2 = new ArrayList<>();
 	
 	
 

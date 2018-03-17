@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
+
 <div class="seachAndAdd">
 	<form:form action="" method="post" class="seachAndAdd">
 		<div><input type="text" name="titleFilter" placeholder="пошук"></div>
@@ -17,23 +18,26 @@
 </div>
 <div class="viewTable">
 	<table class="viewTable">
+	<thead>
 	<tr>
 		<td class="newsCol1">Прізвище</td>
 		<td class="newsCol2">Ім'я</td>
 		<td class="newsCol2">По-батькові</td>
 		<td class="newsCol3">Предмет</td>
 	</tr>
-	<c:forEach items="${teacherListModel}" var="one">
-		<tr>
-		<td class="newsCol1">
-			<a  class="linkLikeText" href="">${one.lastName}</a>
-		</td>
-		<td class="newsCol2">${one.firstName}</td>
-		<td class="newsCol2">${one.middleName}</td>
-		<td class="newsCol3">${one.subject}</td>
-	</tr>
-	</c:forEach>
-	<tr></tr>
+	</thead>
+	
+	<tbody>
+		<c:forEach items="${teacherListModel}" var="one">
+			<tr onclick="openWin('${pageContext.request.contextPath}/director/profile-teacher${one.id}')">
+				<td class="newsCol1">${one.lastName}</td>
+				<td class="newsCol2">${one.firstName}</td>
+				<td class="newsCol2">${one.middleName}</td>
+				<td class="newsCol3">${one.subject}</td>
+			</tr>
+		</c:forEach>
+	</tbody>
+	
 </table>
 </div>
 <c:url var="firstUrl" value="${pageContext.request.contextPath}/director/teachers/1" />

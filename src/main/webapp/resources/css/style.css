@@ -239,6 +239,10 @@ a.linkLikeButton {
 }
 .profileNews {
 	padding-bottom: 1vw;
+	padding-top: 1vw;
+}
+.profileNews img {
+	height: 10vw;
 }
 .ulLikePage {
 	display: flex;
@@ -286,4 +290,8 @@ li.liLikePage {
 .failLogin {
 	color: red;
 	font-size: 0.5vw;
+}
+.viewTable table tbody tr:hover {
+cursor:pointer;
+background-color: rgb(222, 222, 222);
 }

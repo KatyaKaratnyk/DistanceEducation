@@ -8,21 +8,21 @@
     	<div class="profileNews"><a class="linkLikeButton" href="${pageContext.request.contextPath}/director/remove/news${newsModel.getId()}">видалити новину</a></div>
     </div>
     	
-    	<div class="profileNews"><span>${newsModel.getTitle()}</span></div>
+    	<div class="profileNews"><span>${newsModel.title}</span></div>
     	
 		<div class="profileNews"><span></span>Опис:</div>
-    	<div class="profileNews"><span>${newsModel.getDescription()}</span></div>
+    	<div class="profileNews"><span>${newsModel.description}</span></div>
     	
     	<div class="profileNews">
 			<c:choose>
-				<c:when test="${not empty newsModel.getEncodedFileToByte()}">
-					<img src="data:image/png;base64, ${newsModel.getEncodedFileToByte()}">
+				<c:when test="${not empty newsModel.encodedToByte}">
+					<img src="data:image/png;base64, ${newsModel.encodedToByte}">
 				</c:when>
 			</c:choose>
 		</div>
 		
 		<div class="profileNews"><span>Автор:</span></div>
-		<div class="profileNews"><span>${newsModel.userEntity.lastName}</span></div>
+		<div class="profileNews"><span>${newsModel.fullNameUser}</span></div>
 		
 
     </div>

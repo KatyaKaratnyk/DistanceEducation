@@ -1,56 +1,78 @@
 package ua.karatnyk.mapper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ua.karatnyk.constants.Constants;
-import ua.karatnyk.domain.NewsRequest;
+import ua.karatnyk.domain.NewsAddRequest;
+import ua.karatnyk.domain.NewsEditRequest;
+import ua.karatnyk.domain.NewsViewRequest;
 import ua.karatnyk.entity.News;
 import ua.karatnyk.service.utilities.FileManager;
 
 public interface NewsMapper {
 	
-	public static News newsRequestToNewsEntity(NewsRequest request) throws IOException {
+	public static List<NewsViewRequest> listNewsToListNewsViewRequest(List<News> newsList) {
+		
+		List<NewsViewRequest> requests = new ArrayList<>();
+		
+		for(News n: newsList) {
+			NewsViewRequest request = NewsMapper.newsToViewRequest(n);
+			
+			requests.add(request);
+		}
+		
+		return requests;
+		
+	}
+	
+	public static News addRequestToNews(NewsAddRequest request) {
 		News news = new News();
 		news.setDescription(request.getDescription());
 		news.setTitle(request.getTitle());
-		news.setId(request.getId());
-		news.setUserEntity(request.getUserEntity());
-		if(!request.getFile().isEmpty()) {
-			news.setPathToFoto(FileManager.pathToImageInProject(request.getFile(), Constants.FOLDER_FOR_NEWS_IMAGES));
-			FileManager.saveImageInProject(request.getFile(), Constants.FOLDER_FOR_NEWS_IMAGES);
-		}
-		else {
-			news.setPathToFoto(request.getPathToImage());
-		}
+		if(!request.getFile().isEmpty())
+			news.setNameFoto(FileManager.nameFile(request.getFile()));
+		else 
+			news.setNameFoto("noImage.png");
 		return news;
 	}
 	
-	public static List<NewsRequest> newsToNewsRequest(List<News> listNews) {
-		List<NewsRequest> newsRequests = new ArrayList<>();
-		for(News n: listNews) {
-			NewsRequest newsRequest = new NewsRequest();
-			newsRequest.setId(n.getId());
-			newsRequest.setDescription(n.getDescription());
-			newsRequest.setTitle(n.getTitle());
-			if(n.getUserEntity() != null)
-				newsRequest.setUserEntity(n.getUserEntity());
-			if(n.getPathToFoto() != null)
-				newsRequest.setEncodedFileToByte(FileManager.encodedFileToByteFromProject(n.getPathToFoto()));
-			newsRequests.add(newsRequest);
-		}
-		return newsRequests;
+	public static NewsViewRequest newsToViewRequest(News news) {
+		NewsViewRequest request = new NewsViewRequest();
+		request.setId(news.getId());
+		request.setDescription(news.getDescription());
+		request.setTitle(news.getTitle());
+		request.setFullNameUser(news.getCreatedByUser().getFirstName()+" "+news.getCreatedByUser().getLastName());
+		request.setIdUser(news.getCreatedByUser().getId());
+		if(news.getNameFoto().equals("noImage.png")) {
+			request.setEncodedToByte(FileManager.encodedFileToByteFromProject(FileManager.pathToDefaultImage("noImage.png")));
+		} else
+			request.setEncodedToByte(FileManager.encodedFileToByteFromProject(FileManager.fullPathToImage(request.getIdUser(), news.getNameFoto())));
+		
+		return request;
 	}
-	public static NewsRequest newsToNewsRequest(News news) {
-		NewsRequest newsRequest = new NewsRequest();
-		newsRequest.setId(news.getId());
-		newsRequest.setDescription(news.getDescription());
-		newsRequest.setTitle(news.getTitle());
-		newsRequest.setPathToImage(news.getPathToFoto());
-		newsRequest.setEncodedFileToByte(FileManager.encodedFileToByteFromProject(news.getPathToFoto()));
-		if(news.getUserEntity() != null)
-			newsRequest.setUserEntity(news.getUserEntity());
-		return newsRequest;
+	
+	public static News editNewsRequestToNews(NewsEditRequest request) {
+		
+		News news = new News();
+		news.setId(request.getId());
+		news.setTitle(request.getTitle());
+		news.setDescription(request.getDescription());
+		if(!request.getFile().isEmpty()) {
+			news.setNameFoto(FileManager.nameFile(request.getFile()));
+		} else {
+			news.setNameFoto(request.getNameImage());
+		}
+		
+		return news;
+	}
+	
+	public static NewsEditRequest newsToNewsEditRequest(News news) {
+		NewsEditRequest request = new NewsEditRequest();
+		request.setDescription(news.getDescription());
+		request.setId(news.getId());
+		request.setNameImage(news.getNameFoto());
+		request.setTitle(news.getTitle());
+		request.setUserId(news.getCreatedByUser().getId());
+		return request;
 	}
 }

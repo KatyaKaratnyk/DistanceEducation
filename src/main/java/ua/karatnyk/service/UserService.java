@@ -9,5 +9,5 @@ public interface UserService {
 	
 	
 	void saveUser(UserEntity entity);
-
+	void updateUser(UserEntity entity);
 }

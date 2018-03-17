@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 import ua.karatnyk.entity.UserEntity;
+import ua.karatnyk.enumerations.School;
 
 public interface TeacherService {
 	

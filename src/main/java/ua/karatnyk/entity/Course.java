@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -14,7 +12,6 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ua.karatnyk.enumerations.Subject;
 
 @Entity
 @Table(name = "courses", indexes = @Index(columnList = "course_title"))
@@ -31,9 +28,6 @@ public class Course extends BaseEntity{
 	
 	@OneToMany(mappedBy = "course")
 	private List<Theme> themes = new ArrayList<Theme>();
-	
-	@Enumerated(EnumType.STRING)
-	private Subject subject;
 	
 	@OneToMany(mappedBy = "course")
 	private List<Group> groups = new ArrayList<Group>();

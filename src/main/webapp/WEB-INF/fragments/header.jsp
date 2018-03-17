@@ -12,13 +12,15 @@
 	</div>
 	<div>
 		<sec:authorize access="isAuthenticated()">
-		<sec:authentication property="principal.username" var="username"/>
-	     	<li><a href="/user">${username}</a></li>
-					<form:form action="/logout" method="post">
-						<li><input type="submit" value="logout" /></li>
-					</form:form>
-			</sec:authorize>     
-	
+			<sec:authentication property="principal.username" var="user"/>
+	     			<li><a href="/profile">мій профіль</a></li>	
+				
+				<form:form action="/logout" method="post">
+					<li><input type="submit" value="вихід" /></li>
+				</form:form>
+		</sec:authorize>  
+		
+				
 	</div>  
 </header>
 

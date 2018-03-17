@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import ua.karatnyk.constants.Constants;
-import ua.karatnyk.domain.NewsRequest;
+import ua.karatnyk.domain.NewsAddRequest;
+import ua.karatnyk.domain.NewsEditRequest;
+import ua.karatnyk.domain.NewsViewRequest;
 import ua.karatnyk.entity.News;
 import ua.karatnyk.mapper.NewsMapper;
 import ua.karatnyk.service.NewsService;
@@ -54,7 +55,7 @@ public class NewsController {
 		model.addAttribute("beginIndex", begin);
 		model.addAttribute("endIndex", end);
 		model.addAttribute("currentIndex", currentPage);
-		model.addAttribute("newsListByPageSize", NewsMapper.newsToNewsRequest(page.getContent()));
+		model.addAttribute("newsListByPageSize", NewsMapper.listNewsToListNewsViewRequest(page.getContent()));
 	
 		return "director/news/view_news";
 	}
@@ -73,49 +74,53 @@ public class NewsController {
 	@GetMapping("/add_news")
 	public String showAddNewsPage(Model model) {
 		
-		model.addAttribute("newsRequestModel", new NewsRequest());	
+		model.addAttribute("newsRequestModel", new NewsAddRequest());	
 		return "director/news/add_news";
 	}
 	
 	@PostMapping("/add_news")
-	public String addNewsPage(@ModelAttribute("newsRequestModel") @Valid NewsRequest newsRequest, 
+	public String addNewsPage(@ModelAttribute("newsRequestModel") @Valid NewsAddRequest request, 
 			BindingResult result, Principal principal) throws IOException  {
 		
 		if(result.hasErrors()) {
 			return "director/news/add_news";
 		}
 		
-		News news = NewsMapper.newsRequestToNewsEntity(newsRequest);
-		news.setUserEntity(userService.findByLogin(principal.getName()));
+		News news = NewsMapper.addRequestToNews(request);
+		news.setCreatedByUser(userService.findByLogin(principal.getName()));
 		newsService.saveNews(news);
-		FileManager.saveImageInProject(newsRequest.getFile(), Constants.FOLDER_FOR_NEWS_IMAGES);
+		if(!request.getFile().isEmpty())
+			FileManager.saveImageUserInProject(request.getFile(), userService.findByLogin(principal.getName()).getId());
 		return "redirect:/director/news/1";
 	}
 	
 	@GetMapping("/profile/news{newsId}")
 	public String showNewsProfilePage(Model model, @PathVariable("newsId") String newsId) {
 		News news = newsService.findById(Integer.parseInt(newsId));
-		NewsRequest newsRequest = NewsMapper.newsToNewsRequest(news);	
-		model.addAttribute("newsModel", newsRequest);
+		NewsViewRequest request = NewsMapper.newsToViewRequest(news);	
+		model.addAttribute("newsModel", request);
 		return "director/news/profile_news";
 	}
 	
 	@GetMapping("/edit/news{newsId}")
 	public String showEditNewsPage(Model model, @PathVariable("newsId") int newsId) {
 		News news = newsService.findById(newsId);
-		NewsRequest request = NewsMapper.newsToNewsRequest(news); 	
+		NewsEditRequest request = NewsMapper.newsToNewsEditRequest(news);
 		model.addAttribute("newsEditModel", request);
 		return "director/news/edit_news";
 	}
 	
 	@PostMapping("/edit/news{newsId}")
-	public String editNewsPage(@ModelAttribute("newsEditModel") @Valid NewsRequest request,
-			BindingResult result) throws IOException{
+	public String editNewsPage(@ModelAttribute("newsEditModel") @Valid NewsEditRequest request,
+			BindingResult result, Principal principal) throws IOException{
 		if(result.hasErrors()) {
 			return "director/news/edit_news";
 		}
-		News news = NewsMapper.newsRequestToNewsEntity(request);
+		News news = NewsMapper.editNewsRequestToNews(request);
+		news.setCreatedByUser(userService.findById(request.getUserId()));
 		newsService.saveNews(news);
+		if(!request.getFile().isEmpty())
+			FileManager.saveImageUserInProject(request.getFile(), userService.findByLogin(principal.getName()).getId());
 		
 		return "redirect:/director/profile/news"+request.getId();
 	}

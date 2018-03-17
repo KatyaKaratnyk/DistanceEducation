@@ -14,25 +14,38 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileManager {
 	
-	public static void saveImageInProject(MultipartFile file, String nameFolder) throws IOException {
+	public static void saveImageUserInProject(MultipartFile file, int idUser) throws IOException {
 		
-		if(FileManager.pathToImageInProject(file, nameFolder) != null) {
+		String pathFile = FileManager.pathToUserImagesInProject(idUser)+File.separator+FileManager.nameFile(file);
+		
+		if(pathFile != null) {
 			
 			BufferedImage image = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
-			File destination = new File(FileManager.pathToImageInProject(file, nameFolder));
+			File destination = new File(pathFile);
 			ImageIO.write(image, "png", destination);
 		}
 	}
 	
-	public static String pathToImageInProject(MultipartFile file, String nameFolder) {
-		String rootPath = System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+File.separator+"webapp"+File.separator+nameFolder;
+	public static String pathToImagesInProject() {
+		String rootPath = System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+File.separator+"webapp"+File.separator+"images";
 		File uploadDir = new File(rootPath);
 		if(!uploadDir.exists()) uploadDir.mkdirs();
-		if(!file.isEmpty() && file != null) {
-			String pathFile = uploadDir.getAbsolutePath()+File.separator+file.getOriginalFilename();
-			return pathFile;
-		}
-		return null;
+		return uploadDir.getAbsolutePath();
+	}
+	
+	public static String pathToUserImagesInProject(int idUser) {
+		String rootPath = FileManager.pathToImagesInProject()+File.separator+"user"+idUser;
+		File uploadDir = new File(rootPath);
+		if(!uploadDir.exists()) uploadDir.mkdirs();
+		return uploadDir.getAbsolutePath();
+	}
+	
+	public static String fullPathToImage(int idUser, String nameFile) {
+		return FileManager.pathToUserImagesInProject(idUser)+File.separator+nameFile;
+	}
+	
+	public static String nameFile(MultipartFile file) {
+		return file.getOriginalFilename();
 	}
 	
 	public static String encodedFileToByteFromProject(String pathToFile) {
@@ -63,6 +76,9 @@ public class FileManager {
 		
 	}
 	
+	public static String pathToDefaultImage(String nameImage) {
+		return FileManager.pathToImagesInProject()+File.separator+nameImage;
+	}
 
 
 }

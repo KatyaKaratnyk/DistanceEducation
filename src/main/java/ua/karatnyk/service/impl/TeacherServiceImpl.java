@@ -19,15 +19,17 @@ public class TeacherServiceImpl implements TeacherService{
 	@Autowired
 	private UserRepository userRepository;
 
-	@Override
-	public List<UserEntity> findAllActiveTeachers() {
-		return userRepository.findUsersByRoleAndActice(Role.ROLE_TEACHER);
-	}
-
+	
 	@Override
 	public Page<UserEntity> getPagesTeachers(int pageNumber, int pageSize, String sort, String sortByField) {
 		PageRequest request = new PageRequest(pageNumber-1, pageSize, sort.toUpperCase().equals("ASC")?Sort.Direction.ASC:Sort.Direction.DESC, sortByField);
 		return userRepository.findUsersByRoleAndActice(Role.ROLE_TEACHER, request);
+	}
+
+
+	@Override
+	public List<UserEntity> findAllActiveTeachers() {
+		return userRepository.findUsersByRoleAndActice(Role.ROLE_TEACHER);
 	}
 
 }

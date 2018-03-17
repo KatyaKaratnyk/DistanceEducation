@@ -37,9 +37,16 @@ public class ClassToStudent extends BaseEntity{
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_teacher_id")
-	private UserEntity userEntity2;
+	private UserEntity userEntity;
 	
 	@OneToMany(mappedBy = "classStudent")
 	List<UserEntity> userEntities = new ArrayList<>();
+
+	@Override
+	public String toString() {
+		return this.grade.getTitle()+"-"+this.letterToGrade.getTitle();
+	}
+	
+	
 
 }
