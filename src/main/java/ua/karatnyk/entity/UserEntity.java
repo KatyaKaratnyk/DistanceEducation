@@ -33,21 +33,26 @@ import ua.karatnyk.enumerations.Subject;
 @NoArgsConstructor
 public class UserEntity extends BaseEntity{
 	
+	@Column(nullable = true, unique = true)
 	private String login;
 	
+	@Column(nullable = true)
 	private String password;
 	
-	@Column (name = "first_name")
+	@Column(name = "password_text", nullable = true)
+	private String passwordText;
+	
+	@Column (name = "first_name", nullable = true)
 	private String firstName;
 	
-	@Column (name = "last_name")
+	@Column (name = "last_name", nullable = true)
 	private String lastName;
 	
 	@Column (name = "middle_name")
 	private String middleName;
 	
 	@Enumerated(EnumType.ORDINAL)
-	@Column(updatable = false)
+	@Column(updatable = false, nullable = true)
 	private Role role;
 	
 	private String email;
@@ -59,14 +64,14 @@ public class UserEntity extends BaseEntity{
 	@Column(name = "birth_date")
 	private Date birthDate;
 	
-	@Column(name = "name_foto")
+	@Column(name = "name_foto", nullable = true)
 	private String nameFoto;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_id")
 	private ClassToStudent classStudent; //клас, в якому навчається учень. Тільки для учнів
 	
-	@OneToOne(mappedBy = "userEntity")
+	@OneToOne(mappedBy = "userClassTeacher")
 	private ClassToStudent classTeacher; //клас, в якому вчитель є класним керівником. Тільки для вчителів
 
 	@Enumerated(EnumType.STRING)
@@ -77,41 +82,41 @@ public class UserEntity extends BaseEntity{
 	private List<Group> groups = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "createdByUser")
-	private List<Group> groups2 = new ArrayList<>();
+	private List<Group> createdByUserGroups = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "createdByUser")
-	private List<Course> courses = new ArrayList<>();
+	private List<Course> createdByUserCourses = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "createdByUser")
-	private List<Theme> themes = new ArrayList<>();
+	private List<Theme> createdByUserThemes = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "createdByUser")
-	private List<UserEntity> userEntities = new ArrayList<>();
+	private List<UserEntity> createdByUserUserEntities = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "createdByUser")
-	private List<ClassToStudent> classToStudents = new ArrayList<>();
+	private List<ClassToStudent> createdByUserClassToStudents = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "createdByUser")
-	private List<News> newsList = new ArrayList<>();
+	private List<News> createdByUserNewsList = new ArrayList<>();
 	
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
-	private List<Group> groups3 = new ArrayList<>();
+	private List<Group> lastUpdateByUserGroups = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
-	private List<Course> courses2 = new ArrayList<>();
+	private List<Course> lastUpdateByUserCourses = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
-	private List<Theme> themes2 = new ArrayList<>();
+	private List<Theme> lastUpdateByUserThemes = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
-	private List<UserEntity> userEntities2 = new ArrayList<>();
+	private List<UserEntity> lastUpdateByUserUserEntities = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
-	private List<ClassToStudent> classToStudents2 = new ArrayList<>();
+	private List<ClassToStudent> lastUpdateByUserClassToStudents = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
-	private List<News> newsList2 = new ArrayList<>();
+	private List<News> lastUpdateByUserNewsList = new ArrayList<>();
 	
 	
 

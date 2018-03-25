@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import ua.karatnyk.domain.NewsAddRequest;
 import ua.karatnyk.domain.NewsEditRequest;
+import ua.karatnyk.domain.NewsTitleFilter;
 import ua.karatnyk.domain.NewsViewRequest;
 import ua.karatnyk.entity.News;
 import ua.karatnyk.mapper.NewsMapper;
@@ -38,15 +39,10 @@ public class NewsController {
 	@Autowired
 	private UserService userService;
 	
-	private String titleFilter = new String();
-	
 	@GetMapping("/news/{pageNumber}")
 	public String showNewsTablePage(Model model, @PathVariable("pageNumber") int pageNumber) {
 		
 		Page<News> page = newsService.getPagebleNews(pageNumber, 5, "DESC", "createdAt");
-		if(!this.titleFilter.isEmpty() && this.titleFilter != null) {
-			page = newsService.getPagebleNewsWithTitleFilter(pageNumber, 5, "DESC", "createdAt", this.titleFilter);
-		} 
 		int currentPage = page.getNumber()+1;
 		int begin = Math.max(1, currentPage-1);
 		int end = Math.min(begin+10, page.getNumber());
@@ -56,18 +52,28 @@ public class NewsController {
 		model.addAttribute("endIndex", end);
 		model.addAttribute("currentIndex", currentPage);
 		model.addAttribute("newsListByPageSize", NewsMapper.listNewsToListNewsViewRequest(page.getContent()));
-	
+		
 		return "director/news/view_news";
 	}
 	
-	@PostMapping("/search/news") 
-	public String makeFilter(@RequestParam("titleFilter") String titleFilter) {
-		this.titleFilter = titleFilter;
-		return "redirect:/director/news/1";
+	@GetMapping("/search/news/{pageNumber}") 
+	public String makeFilterShowPage(Model model, @PathVariable("pageNumber") int pageNumber, @RequestParam("search") String filter) {
+		Page<News> page = newsService.getPagebleNewsWithTitleFilter(pageNumber, 5, "DESC", "createdAt", new NewsTitleFilter(filter));
+		int currentPage = page.getNumber()+1;
+		int begin = Math.max(1, currentPage-1);
+		int end = Math.min(begin+10, page.getNumber());
+		
+		model.addAttribute("newsList", page);
+		model.addAttribute("beginIndex", begin);
+		model.addAttribute("endIndex", end);
+		model.addAttribute("currentIndex", currentPage);
+		model.addAttribute("newsListByPageSize", NewsMapper.listNewsToListNewsViewRequest(page.getContent()));
+		return "director/news/view_news";
 	}
-	@PostMapping("/remove_filter/news") 
+	
+	@GetMapping("/remove_filter/news") 
 	public String removeFilter() {
-		this.titleFilter = "";
+		
 		return "redirect:/director/news/1";
 	}
 	
@@ -87,10 +93,10 @@ public class NewsController {
 		}
 		
 		News news = NewsMapper.addRequestToNews(request);
-		news.setCreatedByUser(userService.findByLogin(principal.getName()));
+		news.setCreatedByUser(userService.findByLoginActive(principal.getName()));
 		newsService.saveNews(news);
 		if(!request.getFile().isEmpty())
-			FileManager.saveImageUserInProject(request.getFile(), userService.findByLogin(principal.getName()).getId());
+			FileManager.saveImageUserInProject(request.getFile(), userService.findByLoginActive(principal.getName()).getId());
 		return "redirect:/director/news/1";
 	}
 	
@@ -117,10 +123,10 @@ public class NewsController {
 			return "director/news/edit_news";
 		}
 		News news = NewsMapper.editNewsRequestToNews(request);
-		news.setCreatedByUser(userService.findById(request.getUserId()));
+		news.setCreatedByUser(userService.findByIdActive(request.getUserId()));
 		newsService.saveNews(news);
 		if(!request.getFile().isEmpty())
-			FileManager.saveImageUserInProject(request.getFile(), userService.findByLogin(principal.getName()).getId());
+			FileManager.saveImageUserInProject(request.getFile(), userService.findByLoginActive(principal.getName()).getId());
 		
 		return "redirect:/director/profile/news"+request.getId();
 	}

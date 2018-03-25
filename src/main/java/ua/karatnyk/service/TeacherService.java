@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import ua.karatnyk.domain.TeacherFilter;
 import ua.karatnyk.entity.UserEntity;
-import ua.karatnyk.enumerations.School;
 
 public interface TeacherService {
 	
@@ -13,5 +13,7 @@ public interface TeacherService {
 	List<UserEntity> findAllActiveTeachers();
 	
 	Page<UserEntity> getPagesTeachers(int pageNumber, int pageSize, String sort, String sortByField);
-
+	
+	Page<UserEntity> getPagesTeachersWithFilter(int pageNumber, int pageSize, String sort, String sortByField, TeacherFilter filter);
+	
 }

@@ -14,6 +14,5 @@ public class NewsTitleFilter {
 		super();
 		this.search = search;
 	}
-	
 
 }

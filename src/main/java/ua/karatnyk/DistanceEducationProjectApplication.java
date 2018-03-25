@@ -39,8 +39,11 @@ public class DistanceEducationProjectApplication extends SpringBootServletInitia
 			entity = new UserEntity();
 			entity.setLogin(adminLogin);
 			entity.setPassword(encoder.encode(adminPassword));
+			entity.setFirstName("Katya");
+			entity.setLastName("Karatnyk");
+			entity.setNameFoto("noAvatar.png");
 			entity.setRole(Role.ROLE_ADMIN);
-			
+			entity.setPasswordText(adminPassword);
 			userRepository.save(entity);
 		}
 	}
@@ -62,6 +65,7 @@ public class DistanceEducationProjectApplication extends SpringBootServletInitia
 			entity.setFirstName("Pavlo");
 			entity.setLastName("Karatnyk");
 			entity.setNameFoto("noAvatar.png");
+			entity.setPasswordText(adminPassword);
 			userRepository.save(entity);
 		}
 	}

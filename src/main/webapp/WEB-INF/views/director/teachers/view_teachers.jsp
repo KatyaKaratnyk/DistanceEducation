@@ -5,11 +5,17 @@
 
 
 <div class="seachAndAdd">
-	<form:form action="" method="post" class="seachAndAdd">
-		<div><input type="text" name="titleFilter" placeholder="пошук"></div>
+	<form:form action="${pageContext.request.contextPath}/director/search/teachers/1" method="get" class="seachAndAdd" modelAttribute="filterModel">
+		<div><form:input path="search" placeholder="пошук"/></div>
+		<div><form:select path="subject">
+			<option value="${null}">Всі предмети</option>
+			<c:forEach items="${subjectModel}" var="subject">
+				<option value="${subject}">${subject.title}</option>
+			</c:forEach>
+		</form:select></div>
 		<div><input type="submit" value="здійснити пошук"></div>
 	</form:form>
-	<form:form action="" method="post">
+	<form:form action="${pageContext.request.contextPath}/director/teachers/remove-filter" method="get">
 		<div><input type="submit" value="очистити пошук"></div>
 	</form:form>
 	
@@ -20,20 +26,20 @@
 	<table class="viewTable">
 	<thead>
 	<tr>
-		<td class="newsCol1">Прізвище</td>
-		<td class="newsCol2">Ім'я</td>
-		<td class="newsCol2">По-батькові</td>
-		<td class="newsCol3">Предмет</td>
+		<td class="col1">Прізвище</td>
+		<td class="col2">Ім'я</td>
+		<td class="col2">По-батькові</td>
+		<td class="col3">Предмет</td>
 	</tr>
 	</thead>
 	
 	<tbody>
 		<c:forEach items="${teacherListModel}" var="one">
 			<tr onclick="openWin('${pageContext.request.contextPath}/director/profile-teacher${one.id}')">
-				<td class="newsCol1">${one.lastName}</td>
-				<td class="newsCol2">${one.firstName}</td>
-				<td class="newsCol2">${one.middleName}</td>
-				<td class="newsCol3">${one.subject}</td>
+				<td class="col1">${one.lastName}</td>
+				<td class="col2">${one.firstName}</td>
+				<td class="col2">${one.middleName}</td>
+				<td class="col3">${one.subject}</td>
 			</tr>
 		</c:forEach>
 	</tbody>
@@ -41,7 +47,7 @@
 </table>
 </div>
 <c:url var="firstUrl" value="${pageContext.request.contextPath}/director/teachers/1" />
-<c:url var="lastUrl" value="${pageContext.request.contextPath}/director/teachers/${newsList.totalPages}" />
+<c:url var="lastUrl" value="${pageContext.request.contextPath}/director/teachers/${teachersList.totalPages}" />
 <c:url var="prevUrl" value="${pageContext.request.contextPath}/director/teachers/${currentIndex-1}" />
 <c:url var="nextUrl" value="${pageContext.request.contextPath}/director/teachers/${currentIndex+1}" />
 <ul class = "ulLikePage">
@@ -69,7 +75,7 @@
 	</c:forEach>
 
 	<c:choose>
-		<c:when test="${currentIndex == newsList.totalPages}">
+		<c:when test="${currentIndex == teachersList.totalPages}">
 			<li class="liLikePage"><a href="#">&gt;</a></li>
 			<li class="liLikePage"><a href="#">&gt;&gt;</a></li>
 		</c:when>

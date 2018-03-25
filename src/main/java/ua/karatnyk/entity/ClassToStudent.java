@@ -37,7 +37,7 @@ public class ClassToStudent extends BaseEntity{
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "class_teacher_id")
-	private UserEntity userEntity;
+	private UserEntity userClassTeacher;
 	
 	@OneToMany(mappedBy = "classStudent")
 	List<UserEntity> userEntities = new ArrayList<>();

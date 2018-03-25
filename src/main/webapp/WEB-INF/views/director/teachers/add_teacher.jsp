@@ -9,18 +9,18 @@
 		<tr>
 			<td>Прізвище</td>
 			<td>
-				<form:input path="firstName" maxlength="50" size="50"/>
+				<form:input path="lastName" maxlength="50" size="50"/>
 				<span class="valid">*</span>
-				<form:errors  path="firstName" cssClass="error"></form:errors>
+				<form:errors  path="lastName" cssClass="error"></form:errors>
 			</td>	
 		</tr>
 		
 		<tr>
 			<td>Ім'я</td>
 			<td>
-				<form:input path="lastName" maxlength="50" size="50"/>
+				<form:input path="firstName" maxlength="50" size="50"/>
 				<span class="valid">*</span>
-				<form:errors  path="lastName" cssClass="error"></form:errors>
+				<form:errors  path="firstName" cssClass="error"></form:errors>
 			</td>	
 		</tr>
 		
@@ -65,3 +65,4 @@
 	</table>
 	<input class="button" type="submit" value="Додати вчителя">
 </form:form>
+<div class="profile"><a href="#" class="linkLikeButton" onclick="javascript: history.go(-1);">Повернутися</a></div>

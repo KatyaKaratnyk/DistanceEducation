@@ -2,7 +2,6 @@ package ua.karatnyk.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import ua.karatnyk.domain.TeacherAddRequest;
 import ua.karatnyk.domain.TeachersViewRequest;
 import ua.karatnyk.entity.UserEntity;
@@ -14,13 +13,7 @@ public interface TeacherMapper {
 	public static List<TeachersViewRequest> listTeacherEntitiesToListTeachersViewRequest(List<UserEntity> entities) {
 		List<TeachersViewRequest> teachersViewRequests = new ArrayList<>();
 		for(UserEntity e: entities) {
-			TeachersViewRequest t = new TeachersViewRequest();
-			t.setId(e.getId());
-			t.setFirstName(e.getFirstName());
-			t.setLastName(e.getLastName());
-			t.setMiddleName(e.getMiddleName());
-			if(e.getSubject() != null)
-				t.setSubject(e.getSubject().getTitle());
+			TeachersViewRequest t = TeacherMapper.userEntityToTeachersViewRequest(e);
 			teachersViewRequests.add(t);
 		}
 		
@@ -28,7 +21,7 @@ public interface TeacherMapper {
 		
 	}
 	
-	public static UserEntity teacherAddRequestToUserEntity(TeacherAddRequest request) {
+	public static UserEntity teacherAddRequestToUserEntity(TeacherAddRequest request, UserEntity currentEntity) {
 		UserEntity entity = new UserEntity();
 		entity.setFirstName(request.getFirstName());
 		entity.setLastName(request.getLastName());
@@ -38,7 +31,9 @@ public interface TeacherMapper {
 		entity.setSubject(request.getSubject());
 		entity.setNameFoto("noAvatar.png");
 		entity.setRole(Role.ROLE_TEACHER);
-		//entity.setNumberSchool(new CurrentEntity().getCurrentEntity(principal).getNumberSchool());
+		entity.setPasswordText(request.getPassword());
+		entity.setNumberSchool(currentEntity.getNumberSchool());
+		entity.setCreatedByUser(currentEntity);
 		
 		return entity;
 	}
@@ -53,7 +48,7 @@ public interface TeacherMapper {
 			request.setFotoInBydeCode(FileManager.encodedFileToByteFromProject(FileManager.fullPathToImage(user.getId(), user.getNameFoto())));
 		request.setId(user.getId());
 		request.setLastName(user.getLastName());
-		request.setLogin(user.getLastName());
+		request.setLogin(user.getLogin());
 		request.setMiddleName(user.getMiddleName());
 		if(user.isDeleted())
 			request.setStatus("не активний");
@@ -63,6 +58,5 @@ public interface TeacherMapper {
 			request.setSubject(user.getSubject().getTitle());
 		return request;
 	}
-
-
+	
 }

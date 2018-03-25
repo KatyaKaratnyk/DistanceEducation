@@ -26,6 +26,7 @@
 			<td>Додати постер новини</td>
 			<td>
 				<form:input path="file" type ="file" accept="image/jpeg,image/png,image/gif,image/bmp,image/jpg" />
+				<form:errors path="file" cssClass="error"></form:errors>
 				<!-- <input type="file" name="uploadFile" accept="image/jpeg,image/png,image/gif,image/bmp,image/jpg" > --> <br> <br>
 			</td>
 		</tr>
@@ -33,3 +34,4 @@
 	</table>
 	<input class="button" type="submit" value="Додати новину">
 </form:form>
+<div class="profile"><a href="#" class="linkLikeButton" onclick="javascript: history.go(-1);">Повернутися</a></div>

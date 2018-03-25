@@ -15,7 +15,7 @@ import ua.karatnyk.validation.validator.NotEmptyValidator;
 @Constraint(validatedBy = NotEmptyValidator.class)
 public @interface NotEmpty {
 	
-	String message() default "not empty";
+	String message() default "це поле не може бути порожнім";
 	
 	Class<?>[] groups() default {};
 	

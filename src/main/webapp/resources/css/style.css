@@ -224,24 +224,24 @@ a.linkLikeButton {
 .viewTable td {
 	border: 2px solid rgb(20, 130, 239);
 }
-.newsCol1 {
+.col1 {
 	width: 15vw;
 }
-.newsCol2 {
+.col2 {
 	width: 55vw;
 }
-.newsCol3 {
+.col3 {
 	width: 8vw;
 }
 .viewTable a{
 	color: rgb(20, 130, 239);
 	text-decoration: none;
 }
-.profileNews {
+.profile {
 	padding-bottom: 1vw;
 	padding-top: 1vw;
 }
-.profileNews img {
+.profile img {
 	height: 10vw;
 }
 .ulLikePage {

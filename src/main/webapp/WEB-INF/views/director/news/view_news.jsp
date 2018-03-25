@@ -4,11 +4,11 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <div class="seachAndAdd">
-	<form:form action="${pageContext.request.contextPath}/director/search/news" method="post" class="seachAndAdd">
-		<div><input type="text" name="titleFilter" placeholder="пошук"></div>
+	<form:form action="${pageContext.request.contextPath}/director/search/news/1" method="get" class="seachAndAdd">
+		<div><input type="text" name="search" placeholder="пошук"></div>
 		<div><input type="submit" value="здійснити пошук"></div>
 	</form:form>
-	<form:form action="${pageContext.request.contextPath}/director/remove_filter/news" method="post">
+	<form:form action="${pageContext.request.contextPath}/director/remove_filter/news" method="get">
 		<div><input type="submit" value="очистити пошук"></div>
 	</form:form>
 	
@@ -19,17 +19,17 @@
 	<table class="viewTable">
 	<thead>
 	<tr>
-		<td class="newsCol1">Назва новини</td>
-		<td class="newsCol2">Опис новини</td>
-		<td class="newsCol3">Постер новини</td>
+		<td class="col1">Назва новини</td>
+		<td class="col2">Опис новини</td>
+		<td class="col3">Постер новини</td>
 	</tr>
 	</thead>
 	<tbody>
 		<c:forEach items="${newsListByPageSize}" var="newOne">
 			<tr onclick="openWin('${pageContext.request.contextPath}/director/profile/news${newOne.id}')">
-				<td class="newsCol1">${newOne.title}</td>
-				<td class="newsCol2">${newOne.description}</td>
-				<td class="smallImg newsCol3">
+				<td class="col1">${newOne.title}</td>
+				<td class="col2">${newOne.description}</td>
+				<td class="smallImg col3">
 					<c:choose>
 						<c:when test="${not empty newOne.encodedToByte}">
 							<img src="data:image/png;base64, ${newOne.encodedToByte}">

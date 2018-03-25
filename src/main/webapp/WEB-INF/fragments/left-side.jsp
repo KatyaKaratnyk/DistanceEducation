@@ -29,11 +29,9 @@
 		<sec:authorize access="hasRole('ROLE_DIRECTOR')">
 			<ul class="leftUl">
 				<li><a href="${pageContext.request.contextPath}/director/teachers/1">Вчителі</a></li>
-				<li><a href="">Учні</a></li>
+				<li><a href="${pageContext.request.contextPath}/director/students/1">Учні</a></li>
 				<li><a href="${pageContext.request.contextPath}/director/news/1">Новини</a></li>
-				<li><a href="">Курси</a></li>
-				<li><a href="${pageContext.request.contextPath}/director/class_for_student">Класи</a></li>
-				<li><a href="">Групи</a></li>
+				<li><a href="${pageContext.request.contextPath}/director/classes/1">Класи</a></li>
 			</ul>
 		</sec:authorize>
 	</sec:authorize>

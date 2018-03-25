@@ -26,9 +26,11 @@
 			<td>Додати постер новини</td>
 			<td>
 				<form:input path="file" type ="file" accept="image/jpeg,image/png,image/gif,image/bmp,image/jpg" />
+				<form:errors path="file" cssClass="error"></form:errors>
 			</td>
 		</tr>
 	
 	</table>
 	<input class="button" type="submit" value="Редагувати новину">
 </form:form> 
+<div class="profile"><a href="#" class="linkLikeButton" onclick="javascript: history.go(-1);">Повернутися</a></div>
