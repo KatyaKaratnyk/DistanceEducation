@@ -1,4 +1,4 @@
- function openWin(url) {
+/* function openWin(url) {
    myWin= open(url, "_self");
  }
  
@@ -262,7 +262,7 @@
  	return ''+d0+d+'-'+m0+m+'-'+y;
  }
  
- 
+ */
  function toggle(el) {
  
  el.style.display = (el.style.display == 'none') ? '' : 'none';

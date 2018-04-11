@@ -8,12 +8,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <!-- Latest compiled and minified CSS -->
-<link type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
+
+
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <link type="text/css" href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
-<script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/javascript.js" ></script>
+<link type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
+
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/bootstrap.min.js" ></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/javascript.js" ></script>
 
 <link type="font" href="https://fonts.googleapis.com/css?family=Amatic+SC|Caveat|Jura|Pacifico|Russo+One|Tangerine" rel="stylesheet">
 <title>
