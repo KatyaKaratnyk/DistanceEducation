@@ -50,7 +50,7 @@
     	<div class="form-group row required">
     		<div class="col-md-12">
      			 <label class="control-label col-sm-2" for="password">Пароль:</label>
-      				<form:input path="password" maxlength="50" size="500" class="form-control is-invalid" id="password" placeholder="Пароль"></form:input>
+      				<form:password path="password" maxlength="50" size="500" class="form-control is-invalid" id="password" placeholder="Пароль"></form:password>
 					<form:errors  path="password" cssClass="error"></form:errors>
         	</div>
     	</div>      

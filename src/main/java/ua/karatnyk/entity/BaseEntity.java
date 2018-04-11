@@ -35,7 +35,7 @@ public abstract class BaseEntity {
 	@Column(name = "is_deleted")
 	private boolean isDeleted;
 	
-	@Column(name = "last_updated_at", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	@Column(name = "last_updated_at"/*, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"*/)
 	private Date lastUpdatedAt;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

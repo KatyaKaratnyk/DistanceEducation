@@ -62,8 +62,8 @@ public class DistanceEducationProjectApplication extends SpringBootServletInitia
 			entity.setPassword(encoder.encode(adminPassword));
 			entity.setRole(Role.ROLE_DIRECTOR);
 			entity.setNumberSchool(School.NUMBER_84);
-			entity.setFirstName("Катерина");
-			entity.setLastName("Каратник");
+			entity.setFirstName("Kateryna");
+			entity.setLastName("Karatnyk");
 			entity.setNameFoto("noAvatar.png");
 			entity.setPasswordText(adminPassword);
 			userRepository.save(entity);
