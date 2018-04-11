@@ -149,6 +149,14 @@
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 		
+		<!-- https://mvnrepository.com/artifact/com.dropbox.core/dropbox-core-sdk -->
+		<dependency>
+   			 <groupId>com.dropbox.core</groupId>
+    		<artifactId>dropbox-core-sdk</artifactId>
+   			 <version>3.0.6</version>
+		</dependency>
+		
+		
 	</dependencies>
 
 	

@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Subject {
 	
-	INFORMATIC("Інформатика"), MATHEMATIC("Математик"), ENGLISH("Англійська мова");
+	INFORMATIC("Інформатика"), MATHEMATIC("Математика"), ENGLISH("Англійська мова"), PHYSICS("Фізика"), CHEMISTRY("Хімія"), UKRAINIAN("Українська мова та література"), HISTORY("Історія");
 	
 	public String title;
 

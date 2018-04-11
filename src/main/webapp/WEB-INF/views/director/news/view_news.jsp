@@ -2,37 +2,59 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<link type="text/css" href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/jquery-1.11.1.min.js" ></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/javascript/bootstrap.min.js" ></script>
+<link type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css" rel="stylesheet">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-<div class="seachAndAdd">
-	<form:form action="${pageContext.request.contextPath}/director/search/news/1" method="get" class="seachAndAdd">
-		<div><input type="text" name="search" placeholder="пошук"></div>
-		<div><input type="submit" value="здійснити пошук"></div>
-	</form:form>
-	<form:form action="${pageContext.request.contextPath}/director/remove_filter/news" method="get">
-		<div><input type="submit" value="очистити пошук"></div>
-	</form:form>
-	
-	<div class="linkLikeButton"><a class="linkLikeButton" href="${pageContext.request.contextPath}/director/add_news">+додати новину</a></div>
-	
+<div >
+<div class="form-inline justify-content-between">
+	<div class="form-group">
+		<a href="${pageContext.request.contextPath}/director/add_news" class="btn btn-info buttonsAll">
+			<span class="glyphicon glyphicon-plus"></span> Додати </a>
+	</div>
+	<div class="form-group pull-right">
+	<div class="form-group">
+			<form:form action="${pageContext.request.contextPath}/director/search/news/1" method="get" class="form-inline">
+				<input name="search" class="form-control mr-sm-2 input_border" type="search" placeholder="пошук...">
+				<button type="submit" class="btn btn-default buttonsAll">
+          			<span class="glyphicon glyphicon-search"></span> Пошук 
+        		</button>
+			</form:form>
+	</div>
+	<div class="form-group">
+			<form:form action="${pageContext.request.contextPath}/director/remove_filter/news" method="get" class="form-inline">
+				<button type="submit" class="btn btn-default buttonsAll">
+					<span class="glyphicon glyphicon-remove"></span> Очистити 
+					</button>
+			</form:form>
+	</div>
+	</div>
+	</div>
 </div>
-<div class="viewTable">
-	<table class="viewTable">
-	<thead>
+<hr></hr>
+<div>
+	<div class="table-responsive" >
+	<table class="table table-hover table-bordered table-condensed" >
+	<thead class="menu-ul-nothover">
 	<tr>
-		<td class="col1">Назва новини</td>
-		<td class="col2">Опис новини</td>
-		<td class="col3">Постер новини</td>
+		<td style="width:30%">Назва</td>
+		<td style="width:60%">Опис</td>
+		<td style="width:10%">Постер</td>
 	</tr>
-	</thead>
+	</thead> 
 	<tbody>
 		<c:forEach items="${newsListByPageSize}" var="newOne">
-			<tr onclick="openWin('${pageContext.request.contextPath}/director/profile/news${newOne.id}')">
-				<td class="col1">${newOne.title}</td>
-				<td class="col2">${newOne.description}</td>
-				<td class="smallImg col3">
+			<tr onclick="openWin('${pageContext.request.contextPath}/director/profile/news${newOne.id}')" >
+				<td class="borderTable">${newOne.title}</td>
+				<td class="borderTable">${newOne.description}</td>
+				<td class="borderTable smallImg">
 					<c:choose>
 						<c:when test="${not empty newOne.encodedToByte}">
-							<img src="data:image/png;base64, ${newOne.encodedToByte}">
+							<img src="data:image/png;base64, ${newOne.encodedToByte}" class="img-fluid img-thumbnail smallImg">
 						</c:when>
 					</c:choose>
 				</td>
@@ -41,58 +63,47 @@
 	</tbody>
 </table>
 </div>
+<c:if test="${flag and newsList.totalPages>1}">
+<div class="text-center">
 <c:url var="firstUrl" value="${pageContext.request.contextPath}/director/news/1" />
 <c:url var="lastUrl" value="${pageContext.request.contextPath}/director/news/${newsList.totalPages}" />
 <c:url var="prevUrl" value="${pageContext.request.contextPath}/director/news/${currentIndex-1}" />
 <c:url var="nextUrl" value="${pageContext.request.contextPath}/director/news/${currentIndex+1}" />
-<ul class = "ulLikePage">
+<ul class = "pagination pagination-sm">
 	<c:choose>
 		<c:when test="${currentIndex == 1}">
-				<li class="liLikePage"><a href="#">&lt;&lt;</a></li>
-				<li class="liLikePage"><a href="#">&lt;</a></li>
-				<li class="liLikePage"><a href="${firstUrl}">1</a></li>
+				<li class="page-item"><a class="menu-ul" href="#">&lt;&lt;</a></li>
+				<li class="page-item"><a class="menu-ul" href="#">&lt;</a></li>
+				<li class="page-item"><a class="menu-ul" href="${firstUrl}">1</a></li>
 		</c:when>
 		<c:otherwise>
-				<li class="liLikePage"><a href="${firstUrl}">&lt;&lt;</a></li>
-				<li class="liLikePage"><a href="${prevUrl}">&lt;</a></li>
+				<li class="page-item"><a class="menu-ul" href="${firstUrl}">&lt;&lt;</a></li>
+				<li class="page-item"><a class="menu-ul" href="${prevUrl}">&lt;</a></li>
 		</c:otherwise>
 	</c:choose>
 	<c:forEach var="i" begin="${beginIndex}" end="${endIndex}">
 		<c:url var="pageUrl" value="${pageContext.request.contextPath}/director/news/${i+1}" />
 		<c:choose>
 			<c:when test="${i+1 == currentIndex}">
-				<li class="liLikePage"><a href="${pageUrl}" /><c:out value="${i+1}"></c:out></a></li>
+				<li class="page-item"><a class="menu-ul" href="${pageUrl}"><c:out value="${i+1}"></c:out></a></li>
 			</c:when>
 			<c:otherwise>
-				<li class="liLikePage"><a href="${pageUrl}" /><c:out value="${i+1}"></c:out></a></li>
+				<li class="page-item"><a class="menu-ul" href="${pageUrl}"><c:out value="${i+1}"></c:out></a></li>
 			</c:otherwise>
 		</c:choose>
 	</c:forEach>
 
 	<c:choose>
 		<c:when test="${currentIndex == newsList.totalPages}">
-			<li class="liLikePage"><a href="#">&gt;</a></li>
-			<li class="liLikePage"><a href="#">&gt;&gt;</a></li>
+			<li class="page-item"><a class="menu-ul" href="#">&gt;</a></li>
+			<li class="page-item"><a class="menu-ul" href="#">&gt;&gt;</a></li>
 		</c:when>
 		<c:otherwise>
-			<li class="liLikePage"><a href="${nextUrl}">&gt;</a></li>
-			<li class="liLikePage"><a href="${lastUrl}">&gt;&gt;</a></li>
+			<li class="page-item"><a class="menu-ul" href="${nextUrl}">&gt;</a></li>
+			<li class="page-item"><a class="menu-ul"  href="${lastUrl}">&gt;&gt;</a></li>
 		</c:otherwise>
 	</c:choose>
 </ul>
-		
-<%-- <form method="get">
-	<div>
-		<label for="sortByField">Sort by Field</label>
-		<select name="field">
-			<option value="${sordByField}">${sordByField}</option>
-			<option value="name">name</option>
-		</select>
-		<label for="sortBy">Sort by</label>
-		<select name="field">
-			<option value="${sordByField}">${sordByField}</option>
-			<option value="name">name</option>
-		</select>
+</div>
+</c:if>
 	</div>
-
-</form>	 --%>

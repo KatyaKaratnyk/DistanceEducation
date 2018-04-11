@@ -1,6 +1,6 @@
 package ua.karatnyk.mapper;
 
-import java.io.IOException;	
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -10,6 +10,7 @@ import ua.karatnyk.domain.ProfileUserEditRequest;
 import ua.karatnyk.domain.ProfileUserViewRequest;
 import ua.karatnyk.domain.UserEditRequest;
 import ua.karatnyk.entity.UserEntity;
+import ua.karatnyk.service.utilities.Constants;
 import ua.karatnyk.service.utilities.FileManager;
 
 public interface UserMapper {
@@ -18,18 +19,16 @@ public interface UserMapper {
 		return new User(entity.getLogin(), entity.getPassword(), AuthorityUtils.createAuthorityList(String.valueOf(entity.getRole())));
 	}
 	
-
-	
-	public static ProfileUserViewRequest userEntityToProfileUserViewRequest(UserEntity entity) {
+public static ProfileUserViewRequest userEntityToProfileUserViewRequest(UserEntity entity) {
 		
 		ProfileUserViewRequest request = new ProfileUserViewRequest();
 		request.setId(entity.getId());
-		if(entity.getNameFoto().equals("noAvatar.png"))
-			request.setEncodedToByteByNameFoto(FileManager.encodedFileToByteFromProject(FileManager.pathToDefaultImage("noAvatar.png")));
+		if(entity.getNameFoto().equals(Constants.USERS_NO_AVATAR))
+			request.setEncodedToByteByNameFoto(FileManager.encodedFileToByteFromProject(FileManager.pathToDefaultImage("noAvatar.png", Constants.FOLDER_FOR_USERS_PHOTOS)));
 		else 
-			request.setEncodedToByteByNameFoto(FileManager.encodedFileToByteFromProject(FileManager.fullPathToImage(entity.getId(), entity.getNameFoto())));
+			request.setEncodedToByteByNameFoto(FileManager.encodedFileToByteFromProject(FileManager.fullPathToUserImages(entity.getId(), entity.getNameFoto(), Constants.FOLDER_FOR_USERS_PHOTOS)));
 		if(entity.getBirthDate() != null) {
-			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat format = new SimpleDateFormat(Constants.FORMATE_DATE);
 			request.setBirthDate(format.format(entity.getBirthDate()));
 		}
 		request.setEmail(entity.getEmail());
@@ -57,7 +56,7 @@ public interface UserMapper {
 		request.setMiddleName(entity.getMiddleName());
 		request.setEmail(entity.getEmail());
 		if(entity.getBirthDate() != null) {
-			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat format = new SimpleDateFormat(Constants.FORMATE_DATE);
 			request.setBirthDate(format.format(entity.getBirthDate()));
 		} 
 		
@@ -71,7 +70,7 @@ public interface UserMapper {
 		if(!request.getFile().isEmpty()) {
 			entity.setNameFoto(FileManager.nameFile(request.getFile()));
 			try {
-				FileManager.saveImageUserInProject(request.getFile(), request.getId());
+				FileManager.savePhotoUserInProject(request.getFile(), request.getId(), Constants.FOLDER_FOR_USERS_PHOTOS);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -83,7 +82,7 @@ public interface UserMapper {
 		entity.setMiddleName(request.getMiddleName());
 		entity.setEmail(request.getEmail());
 		if(!request.getBirthDate().isEmpty() && request.getBirthDate() != null) {
-			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat format = new SimpleDateFormat(Constants.FORMATE_DATE);
 			try {
 				entity.setBirthDate(format.parse(request.getBirthDate()));
 			} catch (ParseException e) {
@@ -110,7 +109,7 @@ public interface UserMapper {
 		request.setMiddleName(entity.getMiddleName());
 		request.setEmail(entity.getEmail());
 		if(entity.getBirthDate() != null) {
-			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat format = new SimpleDateFormat(Constants.FORMATE_DATE);
 			request.setBirthDate(format.format(entity.getBirthDate()));
 		} 
 		request.setSubject(entity.getSubject());
@@ -127,7 +126,7 @@ public interface UserMapper {
 		if(!request.getFile().isEmpty()) {
 			entity.setNameFoto(FileManager.nameFile(request.getFile()));
 			try {
-				FileManager.saveImageUserInProject(request.getFile(), request.getId());
+				FileManager.savePhotoUserInProject(request.getFile(), request.getId(), Constants.FOLDER_FOR_USERS_PHOTOS);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -139,7 +138,7 @@ public interface UserMapper {
 		entity.setMiddleName(request.getMiddleName());
 		entity.setEmail(request.getEmail());
 		if(!request.getBirthDate().isEmpty() && request.getBirthDate() != null) {
-			SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+			SimpleDateFormat format = new SimpleDateFormat(Constants.FORMATE_DATE);
 			try {
 				entity.setBirthDate(format.parse(request.getBirthDate()));
 			} catch (ParseException e) {
@@ -152,6 +151,5 @@ public interface UserMapper {
 		entity.setLastUpdateByUser(currentUser);
 		return entity;
 	}
-
 
 }

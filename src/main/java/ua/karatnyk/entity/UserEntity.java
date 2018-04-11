@@ -77,7 +77,7 @@ public class UserEntity extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private Subject subject;
 	
-	@ManyToMany()
+	@ManyToMany
 	@JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
 	private List<Group> groups = new ArrayList<>();
 	
@@ -88,7 +88,7 @@ public class UserEntity extends BaseEntity{
 	private List<Course> createdByUserCourses = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "createdByUser")
-	private List<Theme> createdByUserThemes = new ArrayList<>();
+	private List<Lesson> createdByUserLessons = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "createdByUser")
 	private List<UserEntity> createdByUserUserEntities = new ArrayList<>();
@@ -99,6 +99,15 @@ public class UserEntity extends BaseEntity{
 	@OneToMany(mappedBy = "createdByUser")
 	private List<News> createdByUserNewsList = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "createdByUser")
+	private List<TheoreticalTask> createdByUserTaskTheoreticalList = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "createdByUser")
+	private List<VideoYouTubeTask> createdByUserVideoYouTubeList = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "createdByUser")
+	private List<TestTask> createdByUserTestList = new ArrayList<>();
+	
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
 	private List<Group> lastUpdateByUserGroups = new ArrayList<>();
@@ -107,7 +116,7 @@ public class UserEntity extends BaseEntity{
 	private List<Course> lastUpdateByUserCourses = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
-	private List<Theme> lastUpdateByUserThemes = new ArrayList<>();
+	private List<Lesson> lastUpdateByUserLessons = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "lastUpdateByUser")
 	private List<UserEntity> lastUpdateByUserUserEntities = new ArrayList<>();
@@ -118,6 +127,13 @@ public class UserEntity extends BaseEntity{
 	@OneToMany(mappedBy = "lastUpdateByUser")
 	private List<News> lastUpdateByUserNewsList = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<TheoreticalTask> lastUpdateByUserTheoreticalList = new ArrayList<>();
 	
-
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<VideoYouTubeTask> lastUpdateByUserTaskVideoYouTubeList = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "lastUpdateByUser")
+	private List<TestTask> lastUpdateByUserTaskTestList = new ArrayList<>();
+	
 }

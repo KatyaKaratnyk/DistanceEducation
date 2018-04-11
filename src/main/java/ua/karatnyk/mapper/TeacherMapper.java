@@ -6,6 +6,7 @@ import ua.karatnyk.domain.TeacherAddRequest;
 import ua.karatnyk.domain.TeachersViewRequest;
 import ua.karatnyk.entity.UserEntity;
 import ua.karatnyk.enumerations.Role;
+import ua.karatnyk.service.utilities.Constants;
 import ua.karatnyk.service.utilities.FileManager;
 
 public interface TeacherMapper {
@@ -29,7 +30,7 @@ public interface TeacherMapper {
 		entity.setLogin(request.getLogin());
 		entity.setPassword(request.getPassword());
 		entity.setSubject(request.getSubject());
-		entity.setNameFoto("noAvatar.png");
+		entity.setNameFoto(Constants.USERS_NO_AVATAR);
 		entity.setRole(Role.ROLE_TEACHER);
 		entity.setPasswordText(request.getPassword());
 		entity.setNumberSchool(currentEntity.getNumberSchool());
@@ -42,10 +43,10 @@ public interface TeacherMapper {
 		TeachersViewRequest request = new TeachersViewRequest();
 		request.setEmail(user.getEmail());
 		request.setFirstName(user.getFirstName());
-		if(user.getNameFoto().equals("noAvatar.png"))
-			request.setFotoInBydeCode(FileManager.encodedFileToByteFromProject(FileManager.pathToDefaultImage("noAvatar.png")));
+		if(user.getNameFoto().equals(Constants.USERS_NO_AVATAR))
+			request.setFotoInBydeCode(FileManager.encodedFileToByteFromProject(FileManager.pathToDefaultImage(Constants.USERS_NO_AVATAR, Constants.FOLDER_FOR_USERS_PHOTOS)));
 		else
-			request.setFotoInBydeCode(FileManager.encodedFileToByteFromProject(FileManager.fullPathToImage(user.getId(), user.getNameFoto())));
+			request.setFotoInBydeCode(FileManager.encodedFileToByteFromProject(FileManager.fullPathToUserImages(user.getId(), user.getNameFoto(), Constants.FOLDER_FOR_USERS_PHOTOS)));
 		request.setId(user.getId());
 		request.setLastName(user.getLastName());
 		request.setLogin(user.getLogin());

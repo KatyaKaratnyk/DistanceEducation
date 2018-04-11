@@ -15,5 +15,6 @@ public interface TeacherService {
 	Page<UserEntity> getPagesTeachers(int pageNumber, int pageSize, String sort, String sortByField);
 	
 	Page<UserEntity> getPagesTeachersWithFilter(int pageNumber, int pageSize, String sort, String sortByField, TeacherFilter filter);
+	List<UserEntity> getPagesTeachersWithFilter(TeacherFilter filter);
 	
 }

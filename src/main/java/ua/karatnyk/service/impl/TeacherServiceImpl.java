@@ -68,6 +68,12 @@ public class TeacherServiceImpl implements TeacherService{
 			}
 		};
 	}
+
+
+	@Override
+	public List<UserEntity> getPagesTeachersWithFilter(TeacherFilter filter) {
+		return userRepository.findAll(getSpecification(filter));
+	}
 	
 
 

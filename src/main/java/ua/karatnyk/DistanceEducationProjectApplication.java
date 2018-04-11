@@ -18,7 +18,7 @@ public class DistanceEducationProjectApplication extends SpringBootServletInitia
 
 	public static void main(String[] args) {
 		ConfigurableApplicationContext context = SpringApplication.run(DistanceEducationProjectApplication.class, args);
-		addAdmin(context);
+		//addAdmin(context);
 		addDirector(context);
 	}
 
@@ -27,7 +27,7 @@ public class DistanceEducationProjectApplication extends SpringBootServletInitia
 		return builder.sources(DistanceEducationProjectApplication.class);
 	}
 	
-	static void addAdmin(ConfigurableApplicationContext context) {
+/*	static void addAdmin(ConfigurableApplicationContext context) {
 		String adminLogin = "k.karatnyk";
 		String adminPassword = "1111";
 		
@@ -46,10 +46,10 @@ public class DistanceEducationProjectApplication extends SpringBootServletInitia
 			entity.setPasswordText(adminPassword);
 			userRepository.save(entity);
 		}
-	}
+	}*/
 	
 	static void addDirector(ConfigurableApplicationContext context) {
-		String adminLogin = "p.karatnyk";
+		String adminLogin = "admin";
 		String adminPassword = "1111";
 		
 		UserRepository userRepository = context.getBean(UserRepository.class);
@@ -62,8 +62,8 @@ public class DistanceEducationProjectApplication extends SpringBootServletInitia
 			entity.setPassword(encoder.encode(adminPassword));
 			entity.setRole(Role.ROLE_DIRECTOR);
 			entity.setNumberSchool(School.NUMBER_84);
-			entity.setFirstName("Pavlo");
-			entity.setLastName("Karatnyk");
+			entity.setFirstName("Катерина");
+			entity.setLastName("Каратник");
 			entity.setNameFoto("noAvatar.png");
 			entity.setPasswordText(adminPassword);
 			userRepository.save(entity);

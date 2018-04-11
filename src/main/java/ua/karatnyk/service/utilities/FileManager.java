@@ -1,9 +1,11 @@
 package ua.karatnyk.service.utilities;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -14,34 +16,55 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class FileManager {
 	
-	public static void saveImageUserInProject(MultipartFile file, int idUser) throws IOException {
+	public static void savePhotoUserInProject(MultipartFile file, int idUser, String folder) throws IOException {
 		
-		String pathFile = FileManager.pathToUserImagesInProject(idUser)+File.separator+FileManager.nameFile(file);
+		String pathFile = FileManager.pathToUserFolderInProject(folder, idUser)+File.separator+FileManager.nameFile(file);
 		
 		if(pathFile != null) {
 			
 			BufferedImage image = ImageIO.read(new ByteArrayInputStream(file.getBytes()));
 			File destination = new File(pathFile);
 			ImageIO.write(image, "png", destination);
+			
 		}
 	}
 	
-	public static String pathToImagesInProject() {
-		String rootPath = System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+File.separator+"webapp"+File.separator+"images";
+	public static void saveFileInProject(MultipartFile file, int userId, String folder) {
+		String pathFile = System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+
+				File.separator+"webapp"+File.separator+folder+File.separator+ "user"+userId;
+		File uploadDir = new File(pathFile);
+		if(!uploadDir.exists()) uploadDir.mkdirs();
+		if(pathFile != null) {
+			try {
+				byte[] bytes = file.getBytes();
+	            BufferedOutputStream stream =new BufferedOutputStream(new FileOutputStream(new File(uploadDir.getAbsolutePath()+File.separator+file.getOriginalFilename())));
+	            stream.write(bytes);
+	            stream.flush();
+	            stream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	public static String pathToFolderInProject(String folder) {
+		String rootPath = System.getProperty("user.dir")+File.separator+"src"+File.separator+"main"+File.separator+
+				File.separator+"webapp"+File.separator+folder;
 		File uploadDir = new File(rootPath);
 		if(!uploadDir.exists()) uploadDir.mkdirs();
 		return uploadDir.getAbsolutePath();
 	}
 	
-	public static String pathToUserImagesInProject(int idUser) {
-		String rootPath = FileManager.pathToImagesInProject()+File.separator+"user"+idUser;
+	public static String pathToUserFolderInProject(String folder, int idUser) {
+		String rootPath = FileManager.pathToFolderInProject(folder)+File.separator+"user"+idUser;
 		File uploadDir = new File(rootPath);
 		if(!uploadDir.exists()) uploadDir.mkdirs();
 		return uploadDir.getAbsolutePath();
 	}
 	
-	public static String fullPathToImage(int idUser, String nameFile) {
-		return FileManager.pathToUserImagesInProject(idUser)+File.separator+nameFile;
+	public static String fullPathToUserImages(int idUser, String nameFile, String folder) {
+		return FileManager.pathToUserFolderInProject(folder, idUser)+File.separator+nameFile;
 	}
 	
 	public static String nameFile(MultipartFile file) {
@@ -76,9 +99,10 @@ public class FileManager {
 		
 	}
 	
-	public static String pathToDefaultImage(String nameImage) {
-		return FileManager.pathToImagesInProject()+File.separator+nameImage;
+	public static String pathToDefaultImage(String nameImage, String folder) {
+		return FileManager.pathToFolderInProject(folder)+File.separator+nameImage;
 	}
+	
 
 
 }

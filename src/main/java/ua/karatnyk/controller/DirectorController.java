@@ -50,6 +50,7 @@ import ua.karatnyk.service.MailService;
 import ua.karatnyk.service.StudentService;
 import ua.karatnyk.service.TeacherService;
 import ua.karatnyk.service.UserService;
+import ua.karatnyk.service.utilities.Constants;
 import ua.karatnyk.service.utilities.Mail;
 import ua.karatnyk.service.utilities.MailManager;
 
@@ -85,7 +86,7 @@ public class DirectorController {
 	@GetMapping("/teachers/{pageNumber}")
 	public String showTeacherTablePage(Model model, @PathVariable("pageNumber") int pageNumber) {
 		model.addAttribute("filterModel", new TeacherFilter());
-		Page<UserEntity> page = teacherService.getPagesTeachers(pageNumber, 5, "DESC", "createdAt");
+		Page<UserEntity> page = teacherService.getPagesTeachers(pageNumber, 20, "DESC", "createdAt");
 		int currentPage = page.getNumber()+1;
 		int begin = Math.max(1, currentPage-1);
 		int end = Math.min(begin+10, page.getNumber());
@@ -96,23 +97,16 @@ public class DirectorController {
 		model.addAttribute("currentIndex", currentPage);
 		model.addAttribute("teacherListModel", TeacherMapper.listTeacherEntitiesToListTeachersViewRequest(page.getContent()));
 		model.addAttribute("subjectModel", Subject.values());
+		model.addAttribute("flag", true);
 		return "director/teachers/view_teachers";
 	}
 	
 	@GetMapping("/search/teachers/{pageNumber}")
 	public String showTeacherTablePageWithFilter(Model model, @PathVariable("pageNumber") int pageNumber, @ModelAttribute("filterModel") TeacherFilter filter) {
 		
-		Page<UserEntity> page = teacherService.getPagesTeachersWithFilter(pageNumber, 5, "DESC", "createdAt", filter);
-		int currentPage = page.getNumber()+1;
-		int begin = Math.max(1, currentPage-1);
-		int end = Math.min(begin+10, page.getNumber());
-		
-		model.addAttribute("teachersList", page);
-		model.addAttribute("beginIndex", begin);
-		model.addAttribute("endIndex", end);
-		model.addAttribute("currentIndex", currentPage);
-		model.addAttribute("teacherListModel", TeacherMapper.listTeacherEntitiesToListTeachersViewRequest(page.getContent()));
-	
+		List<UserEntity> list = teacherService.getPagesTeachersWithFilter(filter);
+		model.addAttribute("teacherListModel", TeacherMapper.listTeacherEntitiesToListTeachersViewRequest(list));
+		model.addAttribute("flag", false);
 		return "director/teachers/view_teachers";
 	}
 	
@@ -163,7 +157,7 @@ public class DirectorController {
 	public String showStudentTablePage(Model model, @PathVariable("pageNumber") int pageNumber) {
 		model.addAttribute("classesListModel", classService.findAllActiveClasses());
 		model.addAttribute("filterModel", new StudentFilter());
-		Page<UserEntity> page = studentService.getPagesStudents(pageNumber, 5, "DESC", "createdAt");
+		Page<UserEntity> page = studentService.getPagesStudents(pageNumber, 20, "DESC", "createdAt");
 		int currentPage = page.getNumber()+1;
 		int begin = Math.max(1, currentPage-1);
 		int end = Math.min(begin+10, page.getNumber());
@@ -173,24 +167,17 @@ public class DirectorController {
 		model.addAttribute("endIndex", end);
 		model.addAttribute("currentIndex", currentPage);
 		model.addAttribute("studentListModel", StudentMapper.listUserEntityToListStudentRequests(page.getContent()));
-	
+		model.addAttribute("flag", true);
 		return "director/students/view_students";
 	}
 	
 	@PostMapping("/search/students/{pageNumber}")
 	public String showStudentTablePageWithFilter(Model model, @PathVariable("pageNumber") int pageNumber, @ModelAttribute("filterModel") StudentFilter filter) {
 		
-		Page<UserEntity> page = studentService.getPagesStudentsWithFilter(pageNumber, 5, "DESC", "createdAt", filter);
-		int currentPage = page.getNumber()+1;
-		int begin = Math.max(1, currentPage-1);
-		int end = Math.min(begin+10, page.getNumber());
+		List<UserEntity> list = studentService.getStudentsWithFilter(filter);
 		
-		model.addAttribute("studentsList", page);
-		model.addAttribute("beginIndex", begin);
-		model.addAttribute("endIndex", end);
-		model.addAttribute("currentIndex", currentPage);
-		model.addAttribute("studentListModel", StudentMapper.listUserEntityToListStudentRequests(page.getContent()));
-	
+		model.addAttribute("studentListModel", StudentMapper.listUserEntityToListStudentRequests(list));
+		model.addAttribute("flag", false);
 		return "director/students/view_students";
 	}
 	
@@ -226,8 +213,10 @@ public class DirectorController {
 	public String showProfileStudent(@PathVariable("idStudent") int idStudent, Model model) {
 		
 		UserEntity student = userService.findByIdActive(idStudent);
-		if(student.getRole() != Role.ROLE_STUDENT) 
+		if(student.getRole() != Role.ROLE_STUDENT) {
 			return "redirect:/director/students/1";
+		}
+			
 		StudentViewRequest request = StudentMapper.userEntityToStudentViewRequest(student);
 		model.addAttribute("studentModel", request);
 		
@@ -239,7 +228,7 @@ public class DirectorController {
 	@GetMapping("/classes/{pageNumber}")
 	public String showClassesTablePage(Model model, @PathVariable("pageNumber") int pageNumber) {
 		model.addAttribute("gradeModel", Grade.values());
-		Page<ClassToStudent> page = classService.getPagesClasses(pageNumber, 10, "DESC", "createdAt");
+		Page<ClassToStudent> page = classService.getPagesClasses(pageNumber, 20, "DESC", "createdAt");
 		int currentPage = page.getNumber()+1;
 		int begin = Math.max(1, currentPage-1);
 		int end = Math.min(begin+10, page.getNumber());
@@ -248,22 +237,17 @@ public class DirectorController {
 		model.addAttribute("endIndex", end);
 		model.addAttribute("currentIndex", currentPage);
 		model.addAttribute("classesListModel", ClassMapper.listClassEntityToListClassViewRequest(page.getContent()));
+		model.addAttribute("flag", true);
 		return "director/classes/view_classes";
 	}
 	
 	@GetMapping("/search/classes/{pageNumber}")
 	public String showClassesTablePageWithFilter(Model model, @PathVariable("pageNumber") int pageNumber, @RequestParam("gradeFilter") Grade filter) {
 		model.addAttribute("gradeModel", Grade.values());
-		Page<ClassToStudent> page = classService.getPagesClassesWithFilter(pageNumber, 10, "DESC", "createdAt", new ClassFilter(filter));
-		int currentPage = page.getNumber()+1;
-		int begin = Math.max(1, currentPage-1);
-		int end = Math.min(begin+10, page.getNumber());
-		model.addAttribute("classesList", page);
-		model.addAttribute("beginIndex", begin);
-		model.addAttribute("endIndex", end);
-		model.addAttribute("currentIndex", currentPage);
-		model.addAttribute("classesListModel", ClassMapper.listClassEntityToListClassViewRequest(page.getContent()));
-		return "director/classes/view_classes";
+		List<ClassToStudent> list = classService.getClassesWithFilter(new ClassFilter(filter));
+		model.addAttribute("classesListModel", ClassMapper.listClassEntityToListClassViewRequest(list));
+		model.addAttribute("flag", false);
+		return "director/classes/view_classes_search";
 	}
 	
 	@GetMapping("/classes/remove-filter") 
@@ -348,6 +332,19 @@ public class DirectorController {
 		return "redirect:/director/profile-class"+idClass;
 	}
 	
+	@GetMapping("/remove/profile-class{idClass}")
+	public String removeClass(@PathVariable("idClass") int idClass, Principal principal) {
+		
+		try {
+			ClassToStudent classToStudent = classService.findClass(idClass);
+			if(classToStudent == null)
+				return "home";
+			classService.delete(findCurrentUser(principal), new Date(), idClass);
+		} catch (NullPointerException e) {
+			return "home";
+		}
+		return "redirect:/director/classes/1";
+	}
 	
 	//----------------------------Спільне для учнів і вчителів---------------------------
 	private UserEntity findCurrentUser(Principal principal) {
@@ -356,8 +353,19 @@ public class DirectorController {
 	
 	@GetMapping("/edit/password-user{userId}")
 	public String showPasswordPage(@PathVariable("userId") int userId, Model model) {
-		model.addAttribute("editPasswordModel", new PasswordEditRequest(userId));
-		return "director/users/edit_password_user";
+		try {
+			UserEntity userEntity = userService.findByIdActive(userId);
+			if(userEntity == null || userEntity.getRole() != Role.ROLE_STUDENT && userEntity.getRole() != Role.ROLE_TEACHER) {
+				return "home";
+			}
+			String role = userEntity.getRole()==Role.ROLE_STUDENT?"УЧНІ":"ВЧИТЕЛІ";
+			model.addAttribute("role", role);
+			model.addAttribute("editPasswordModel", new PasswordEditRequest(userId));
+			return "director/users/edit_password_user";
+		} catch (NullPointerException e) {
+			e.printStackTrace();	
+			return "home";
+		}
 	}
 	@PostMapping("/edit/password-user{userId}")
 	public String editUserPassword(@ModelAttribute("editPasswordModel") @Valid PasswordEditRequest request, 
@@ -387,6 +395,8 @@ public class DirectorController {
 		if(user.getRole() != Role.ROLE_TEACHER && user.getRole() != Role.ROLE_STUDENT) {
 			return "home";
 		}
+		String role = user.getRole()==Role.ROLE_STUDENT?"УЧНІ":"ВЧИТЕЛІ";
+		model.addAttribute("role", role);
 		UserEditRequest request = UserMapper.userEntetyToUserEditRequest(user);
 		model.addAttribute("userEditModel", request);
 		List<ClassToStudent> listClasses = classService.findAllActiveClasses();
@@ -424,10 +434,31 @@ public class DirectorController {
 		}
 		return "home";
 	}
+	
+	@GetMapping("remove/foto/user{userId}") 
+	public String removeFoto(Principal principal, @PathVariable("userId") int userId) {
+		
+		try {
+			UserEntity entity = userService.findByIdActive(userId);
+			if(entity == null) 
+				return "home";
+			userService.updateFoto(Constants.USERS_NO_AVATAR, new Date(), findCurrentUser(principal), userId);
+			return "redirect:/director/profile-teacher"+userId;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return "home";
+		}
+	}
 	//Відправити листа на власну пошту
 	@GetMapping("/send-password-to-own-email-user{userId}")
-	public String showSendPasswordToOwnEmail(Model model, Principal principal) {
+	public String showSendPasswordToOwnEmail(Model model, Principal principal, @PathVariable("userId") int userId) {
 		try {
+			UserEntity userEntity = userService.findByIdActive(userId);
+			if(userEntity == null || userEntity.getRole() != Role.ROLE_STUDENT && userEntity.getRole() != Role.ROLE_TEACHER) {
+				return "home";
+			}
+			String role = userEntity.getRole()==Role.ROLE_STUDENT?"УЧНІ":"ВЧИТЕЛІ";
+			model.addAttribute("role", role);
 			EmailRequest request = UserMapper.userEntityToEmailRequest(userService.findByLoginActive(principal.getName()));
 			model.addAttribute("emailModel", request);
 		} catch (Exception e) {
@@ -473,6 +504,12 @@ public class DirectorController {
 		@GetMapping("/send-password-to-user{userId}")
 		public String showSendPasswordToUserEmail(Model model, Principal principal, @PathVariable("userId") int userId) {
 			try {
+				UserEntity userEntity = userService.findByIdActive(userId);
+				if(userEntity == null || userEntity.getRole() != Role.ROLE_STUDENT && userEntity.getRole() != Role.ROLE_TEACHER) {
+					return "home";
+				}
+				String role = userEntity.getRole()==Role.ROLE_STUDENT?"УЧНІ":"ВЧИТЕЛІ";
+				model.addAttribute("role", role);
 				EmailRequest request = UserMapper.userEntityToEmailRequest(userService.findByIdActive(userId));
 				model.addAttribute("emailUserModel", request);
 			} catch (Exception e) {
@@ -493,19 +530,24 @@ public class DirectorController {
 				return "home";
 			try {
 				UserEntity currentEntity = userService.findByLoginActive(principal.getName());
-				UserEntity entity = userService.findByIdActive(userId);
-				if(!request.getEmail().equals(entity.getEmail()))
+				UserEntity userEntity = userService.findByIdActive(userId);
+				if(userEntity == null || userEntity.getRole() != Role.ROLE_STUDENT && userEntity.getRole() != Role.ROLE_TEACHER) {
+					return "home";
+				}
+				String role = userEntity.getRole()==Role.ROLE_STUDENT?"УЧНІ":"ВЧИТЕЛІ";
+				model.addAttribute("role", role);
+				if(!request.getEmail().equals(userEntity.getEmail()))
 					userService.updateEmail(request.getEmail(), new Date(), currentEntity, request.getId());
-				Mail mail = MailManager.createMailToSentPassword(entity.getLogin(), entity.getPasswordText(), request.getEmail());
+				Mail mail = MailManager.createMailToSentPassword(userEntity.getLogin(), userEntity.getPasswordText(), request.getEmail());
 				try {
 					mailService.sentMessage(mail);
 				} catch (MailSendException e) {
 					model.addAttribute("notSendModel", "Вибачте, виникла помилка з поштовим сервером, тому лист не відправлено");
 					return "director/users/send_password_email_user";
 				}
-				if(entity.getRole() == Role.ROLE_TEACHER)
+				if(userEntity.getRole() == Role.ROLE_TEACHER)
 					return "redirect:/director/profile-teacher"+userId;
-				if(entity.getRole() == Role.ROLE_STUDENT)
+				if(userEntity.getRole() == Role.ROLE_STUDENT)
 					return "redirect:/director/profile-student"+userId;
 			} catch (NullPointerException e) {
 				e.printStackTrace();
