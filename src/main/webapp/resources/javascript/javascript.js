@@ -1,9 +1,9 @@
-/* function openWin(url) {
+ function openWin(url) {
    myWin= open(url, "_self");
  }
  
  
- function getObj(objID)
+/* function getObj(objID)
  {
      if (document.getElementById) {return document.getElementById(objID);}
      else if (document.all) {return document.all[objID];}
